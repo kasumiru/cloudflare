@@ -1,4 +1,4 @@
-# Cloudflare api control
+# Cloudflare api DNS control
 
 A short script for control your cloudflare dns records. 
 Now support only A dns records.
