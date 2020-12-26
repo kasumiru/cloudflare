@@ -5,7 +5,7 @@ import requests
 import json
 
 
-# version 2020122701
+# version 2020122702
 
 
 
@@ -26,8 +26,6 @@ headers["X-Auth-Key"]   = data["X-Auth-Key"]
 def add(zone,record,ipaddr): 
     data = {
         "type":     "A",
-        "name":     "x", 
-        "content":  "1", 
         "ttl":      "120", 
         "priority": 10, 
         "proxied":  False
@@ -125,6 +123,8 @@ def help():
 if len(sys.argv) == 2:
    if sys.argv[1] == 'get_zonez':
        get_all_zones_list()
+   else:
+       help()
 
 elif len(sys.argv) == 4:
     mode   = sys.argv[1]
