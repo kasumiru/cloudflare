@@ -5,23 +5,40 @@ import requests
 import json
 
 
-# version 2020122702
-
-
-
-
 headers = {
     'Content-Type': 'application/json'
 }
 
+fconfig = 'creds.json'
 
-with open('creds.json') as e:
-    data = json.load(e)
+def write_conf(a,b):
+    data = {}
+    data['X-Auth-Email'] = a
+    data['X-Auth-Key']   = b
+    print('Writing config: ', data)
+    with open(fconfig, 'w') as e:
+        json.dump(data, e)
+
+try:
+    with open(fconfig) as e:
+        data = json.load(e)
+except IOError:
+    print('''
+    Credential file is empty, please paste Your credentials
+    and script will generete creds.json autimaticaly, 
+    or You can manual copy from exampl, see help on github
+    ''')
+    a = input('Please type "X-Auth-Email" (simple: youremail@gmail.com): ')
+    b = input('Please type "X-Auth-Key" (simple: 3210a271xxxxx413d2e8dexxxxxe1ffxxxxca): ') 
+    try:
+        write_conf(a,b)
+        sys.exit(0)
+    except Exception as e:
+        print('variables is lost, try another', e)
+        sys.exit(1)
 
 headers['X-Auth-Email'] = data['X-Auth-Email']
 headers['X-Auth-Key']   = data['X-Auth-Key']
-
-
 
 def add(zone,record,ipaddr): 
     data = {
@@ -46,12 +63,10 @@ def get_zone_id(zone):
         if i.get('name') == zone:
             return i.get('id')
 
-
-
 def get_a_dns_records(zone): 
     url = 'https://api.cloudflare.com/client/v4/zones/{}/dns_records'.format(str(get_zone_id(zone)))
     r = requests.get(url, headers=headers, json='')
-  
+ 
     list = []
     for i in r.json().get('result'):
         type = i.get('type')
@@ -62,22 +77,16 @@ def get_a_dns_records(zone):
         return ' ' * n
 
     def maxlen(list):
-       x = 1
-       for i in list:
-           num = len(i)
-           if num > x:
-               x = num
-       x += 1
-       return x 
+       return max(len(i) for i in list) + 1
 
     for i in r.json().get('result'):
         name = i.get('name')
-        type = i.get('type')
+        dnstype = i.get('type')
         content = i.get('content')
-        if type == 'A':
+        if dnstype == 'A':
             num = maxlen(list) - len(name)
             interval = print_space(num)
-            print('{0}{1}{2} {3}'.format(name,interval,type,content))
+            print('{0}{1}{2} {3}'.format(name, interval, dnstype, content))
     return r.json()
 
 def get_dns_record_id(zone,record):
@@ -101,8 +110,14 @@ def delete(record,zone):
 def get_all_zones_list():
     url = 'https://api.cloudflare.com/client/v4/zones'
     r = requests.get(url, headers=headers, json='')
-    for i in r.json()['result']:
-        print(i['name'])
+    result = r.json()['success']
+    if result == False:
+        print(r.json()['errors'][0]['message'])
+        print(r.json().get('errors')[0].get('error_chain'))
+        sys.exit(1)
+    else:
+        for i in r.json()['result']:
+            print(i['name'])
 
 def help():
     print('./cloudflare-python.py add       subdomain.yourDomain.com 8.8.8.8')
