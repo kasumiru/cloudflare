@@ -51,10 +51,14 @@ def add(zone,record,ipaddr):
     data['content'] = ipaddr
     url = 'https://api.cloudflare.com/client/v4/zones/{}/dns_records'.format(str(get_zone_id(zone)))
     r = requests.post(url, headers=headers, json=data)
-    result = r.json()['success']
-    print('Cloudflare result: {}'.format(result))
-    if result == False:
-        print(r.json()['errors'][0]['message'])
+    try:
+        result = r.json()['success']
+        print('Cloudflare result: {}'.format(result))
+    except Exception as e:
+        #print('Have Expetion:\n', e)
+        #print('AND ENOTHER')
+        #print(r.json()['errors'][0]['message'])
+        print(r.json())
 
 def get_zone_id(zone):
     url = 'https://api.cloudflare.com/client/v4/zones'
