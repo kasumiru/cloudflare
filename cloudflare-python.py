@@ -4,12 +4,19 @@ import os
 import requests
 import json
 
+import module_locator 
+'''for find absolute path dir. see https://coderoad.ru/2632199/Как-получить-путь-к-текущему-исполняемому-файлу-в-Python#2632297
+or https://stackoverflow.com/questions/122327/how-do-i-find-the-location-of-my-python-site-packages-directory
+'''
+
+fullpath = module_locator.module_path()
+
 
 headers = {
     'Content-Type': 'application/json'
 }
 
-fconfig = 'creds.json'
+fconfig = fullpath + '/creds.json'
 
 def write_conf(a,b):
     data = {}
@@ -19,26 +26,32 @@ def write_conf(a,b):
     with open(fconfig, 'w') as e:
         json.dump(data, e)
 
-try:
-    with open(fconfig) as e:
-        data = json.load(e)
-except IOError:
-    print('''
-    Credential file is empty, please paste Your credentials
-    and script will generete creds.json autimaticaly, 
-    or You can manual copy from exampl, see help on github
-    ''')
-    a = input('Please type "X-Auth-Email" (simple: youremail@gmail.com): ')
-    b = input('Please type "X-Auth-Key" (simple: 3210a271xxxxx413d2e8dexxxxxe1ffxxxxca): ') 
+def read_conf():
     try:
-        write_conf(a,b)
-        sys.exit(0)
-    except Exception as e:
-        print('variables is lost, try another', e)
-        sys.exit(1)
+        with open(fconfig) as e:
+            data = json.load(e)
+    except IOError:
+        print('''
+        Credential file is empty, please paste Your credentials
+        and script will generete creds.json autimaticaly, 
+        or You can manual copy from exampl, see help on github
+        ''')
+        a = input('Please type "X-Auth-Email" (simple: youremail@gmail.com): ')
+        b = input('Please type "X-Auth-Key" (simple: 3210a271xxxxx413d2e8dexxxxxe1ffxxxxca): ') 
+        try:
+            write_conf(a,b)
+            sys.exit(0)
+        except Exception as e:
+            print('variables is lost, try another', e)
+            sys.exit(1)
+    
+    headers['X-Auth-Email'] = data['X-Auth-Email']
+    headers['X-Auth-Key']   = data['X-Auth-Key']
 
-headers['X-Auth-Email'] = data['X-Auth-Email']
-headers['X-Auth-Key']   = data['X-Auth-Key']
+
+read_conf()
+
+
 
 def add(zone,record,ipaddr): 
     data = {
