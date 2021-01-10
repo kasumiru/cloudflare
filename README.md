@@ -10,6 +10,11 @@ Create link into your path or add script to $PATH.
 
 ```
 $ ln -s  $(pwd)/cloudflare-python.py /usr/sbin/cf
+
+#Optional for install bash completion:
+
+$ ln -s  $(pwd)/cloudflare_completion.sh /etc/bash_completion.d/cloudflare_completion.sh
+$ echo 'source /etc/bash_completion.d/cloudflare_completion.sh' >> ~/.bashrc
 ```
 
 
