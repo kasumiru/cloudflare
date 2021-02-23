@@ -66,11 +66,12 @@ def add(zone,record,ipaddr):
     r = requests.post(url, headers=headers, json=data)
     try:
         result = r.json()['success']
-        print('Cloudflare result: {}'.format(result))
+        if result == True:
+            print(f'Success registry {record} with {ipaddr}')
+        else:
+            print(f'Cloudflare result: {r.json()}')
     except Exception as e:
-        #print('Have Expetion:\n', e)
-        #print('AND ENOTHER')
-        #print(r.json()['errors'][0]['message'])
+        print('Exceprion:\n', e)
         print(r.json())
 
 def get_zone_id(zone):
