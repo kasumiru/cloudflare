@@ -21,7 +21,9 @@ $ echo 'source /etc/bash_completion.d/cloudflare_completion.sh' >> ~/.bashrc
 ## Getting Started
 
 You can just start:
-```cf``` 
+```
+$ cf
+``` 
 and script asked login and password creds for cloudflare,
 or manual copy creds.json.example to creds.json and cnahge it.
 ```
