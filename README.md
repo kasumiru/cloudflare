@@ -25,7 +25,7 @@ You can just start:
 $ cf
 ``` 
 and script asked login and password creds for cloudflare,
-or manual copy creds.json.example to creds.json and cnahge it.
+or manual copy creds.json.example to creds.json and cnahge it:
 ```
 $ copy creds.json.example creds.json
 $ vim creds.json   #(nano creds.json)
