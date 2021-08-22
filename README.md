@@ -20,12 +20,17 @@ $ echo 'source /etc/bash_completion.d/cloudflare_completion.sh' >> ~/.bashrc
 
 ## Getting Started
 
-copy creds.json.example to creds.json and cnahge it.
+You can just start:
+```
+$ cf
+``` 
+and script asked login and password creds for cloudflare,
+or manual copy creds.json.example to creds.json and cnahge it:
 ```
 $ copy creds.json.example creds.json
 $ vim creds.json   #(nano creds.json)
 ```
-put your credentials from https://dash.cloudflare.com/profile
+take your credentials from https://dash.cloudflare.com/profile
 
 
 ### Script usage
