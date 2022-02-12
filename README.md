@@ -48,10 +48,10 @@ Get all A record:
 $ cf get_all_a yourDomain.com
 ```
 Add A record:
-cf add your-subdomain.your-domain.com ip_address
+cf set your-subdomain.your-domain.com ip_address
 example:
 ```
-$ cf add subdomain.yourDomain.com 8.8.8.8
+$ cf set subdomain.yourDomain.com 8.8.8.8
 ```
 Delete A record:
 ```
