@@ -9,7 +9,7 @@ Now support only A dns records.
 Create link into your path or add script to $PATH.
 
 ```
-$ ln -s  $(pwd)/cloudflare-python.py /usr/sbin/cf
+$ ln -s  $(pwd)/cloudflare-python.py /usr/sbin/dns
 
 #Optional for install bash completion:
 
@@ -22,7 +22,7 @@ $ echo 'source /etc/bash_completion.d/cloudflare_completion.sh' >> ~/.bashrc
 
 You can just start:
 ```
-$ cf
+$ dns
 ``` 
 and script asked login and password creds for cloudflare,
 or manual copy creds.json.example to creds.json and cnahge it:
@@ -37,23 +37,23 @@ take your credentials from https://dash.cloudflare.com/profile
 
 You can see help in any place type:
 ```
-$ cf 
+$ dns 
 ```
 Get all your zone:
 ```
-$ cf get_zonez
+$ dns get_zonez
 ```
 Get all A record:
 ```
-$ cf get_all_a yourDomain.com
+$ dns get_all_a yourDomain.com
 ```
 Add A record:
-cf set your-subdomain.your-domain.com ip_address
+dns set your-subdomain.your-domain.com ip_address
 example:
 ```
-$ cf set subdomain.yourDomain.com 8.8.8.8
+$ dns set subdomain.yourDomain.com 8.8.8.8
 ```
 Delete A record:
 ```
-$ cf del subdomain.yourDomain.com
+$ dns del subdomain.yourDomain.com
 ```
