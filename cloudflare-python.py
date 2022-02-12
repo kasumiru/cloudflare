@@ -53,7 +53,7 @@ read_conf()
 
 
 
-def add(zone,record,ipaddr):
+def set_ipaddr(zone,record,ipaddr):
     data = {
         'type':     "A",
         'ttl':      "120",
@@ -150,7 +150,7 @@ def get_all_zones_list():
 
 
 def help():
-    print('./cloudflare-python.py add       subdomain.yourDomain.com 8.8.8.8')
+    print('./cloudflare-python.py set       subdomain.yourDomain.com 8.8.8.8')
     print('./cloudflare-python.py del       subdomain.yourDomain.com ')
     print('./cloudflare-python.py get_all_a yourDomain.com ')
     print('./cloudflare-python.py get_zones')
@@ -168,8 +168,10 @@ elif len(sys.argv) == 4:
     record = sys.argv[2]
     ipaddr = sys.argv[3]
     zone   = '.'.join(record.split('.')[-2:])
-    if mode == 'add':
-        add(zone,record,ipaddr)
+    mode_list = ['set', 'add']
+    #if mode == 'set':
+    if mode in mode_list:
+        set_ipaddr(zone,record,ipaddr)
     else:
         help()
 
@@ -177,7 +179,9 @@ elif len(sys.argv) == 3:
     mode   = sys.argv[1]
     record = sys.argv[2]
     zone   = '.'.join(record.split('.')[-2:])
-    if mode == 'del':
+    mode_list = ['del', 'delete', 'remove']
+    #if mode == 'del':
+    if mode in mode_list:
         if zone in get_all_zones_list():
             def_delete(record,zone)
         else:
