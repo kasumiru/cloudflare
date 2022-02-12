@@ -56,5 +56,5 @@ _comppll()
     return 0
     
 }
-complete -F _comppll cf
+complete -F _comppll dns
 
