@@ -1,6 +1,6 @@
 # Cloudflare api DNS control
 
-UPD 2022.02.15: added control TXT records ::so-happy::
+UPD 2022.02.15: added control TXT records ::so-happy::                                                                                                        
 A short script for control your cloudflare dns records. 
 Now support A, TXT dns records.
 
