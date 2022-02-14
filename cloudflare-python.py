@@ -32,7 +32,6 @@ or https://stackoverflow.com/questions/122327/how-do-i-find-the-location-of-my-p
 
 fullpath = module_locator.module_path()
 
-
 headers = {
     'Content-Type': 'application/json'
 }
@@ -69,10 +68,7 @@ def read_conf():
     headers['X-Auth-Email'] = data['X-Auth-Email']
     headers['X-Auth-Key']   = data['X-Auth-Key']
 
-
 read_conf()
-
-
 
 def set_ipaddr(zone,record,ipaddr):
     data = {
@@ -94,10 +90,6 @@ def set_ipaddr(zone,record,ipaddr):
     except Exception as e:
         print('Exceprion:\n', e)
         print(r.json())
-
-
-
-
 
 def get_zone_id(zone):
     url = 'https://api.cloudflare.com/client/v4/zones'
@@ -129,7 +121,6 @@ def set_txt_record(zone,record,record_txt):
         print('Exceprion:\n', e)
         print(r.json())
 
-
 def get_a_dns_records(zone):
     zone_id = get_zone_id(zone)
     url = f'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records'
@@ -157,62 +148,40 @@ def get_a_dns_records(zone):
             print('{0}{1}{2} {3}'.format(name, interval, dnstype, content))
     return r.json()
 
-def get_dns_record_id(zone,record):
+def get_dns_record_id(zone,record,record_type):
     zone_id = str(get_zone_id(zone))
     url = f'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records'
     r = requests.get(url, headers=headers, json='')
     all_records = r.json()
-    #print(all_records)
-    #print(all_records)
-    #print(all_records)
+
     for i in all_records.get('result'):
         name = i['name']
         id   = i['id']
-        if name == record:
+        type = i['type']
+        if name == record and type == record_type:
             return id
 
-#zone = 'i--m.im'
-#record = 'kasumiru.i--m.im'
-#x = get_dns_record_id(zone,record)
-#print(x)
-#exit()
-
-
-
 def del_txt_record(zone,dns_name):
-    #print(f'now delete txt {record} from dns name: {dns_name}:')
-    #print('AAAAAAAAAAAAAAAAAAA')
+    print(f'now delete txt record from dns name: {dns_name}:')
     zone_id = str(get_zone_id(zone))
-
-    #print(f'zone_id = {zone_id}')
-    dns_record_id = get_dns_record_id(zone,dns_name)
-    #print(f'dns_record_id = {dns_record_id}')
-    #print(f'dns_name = {dns_name}')
+    record_type = 'TXT'
+    dns_record_id = get_dns_record_id(zone,dns_name,record_type)
     if dns_record_id is not None:
         url = f'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{dns_record_id}'
         r = requests.delete(url, headers=headers, json='')
         print(r.json())
-        
     else:
         print(f'TXT dns record "{dns_name}" not exist!')
-
-#mode = 'add'
-#record = 'kasumiru3.i--m.im'
-#record_txt = 'some text asfafa2222'
-#zone   = '.'.join(record.split('.')[-2:])
-#set_txt_record(zone,record,record_txt)
-#del_txt_record(zone,record)
-#exit()
 
 def def_delete(record,zone):
     print(f'now delete A {record}:')
     zone_id = str(get_zone_id(zone))
-    dns_record_id = get_dns_record_id(zone,record)
+    record_type = 'A'
+    dns_record_id = get_dns_record_id(zone,record,record_type)
     if dns_record_id is not None:
         url = f'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{dns_record_id}'
         r = requests.delete(url, headers=headers, json='')
         print(r.json())
-
     else:
        print(f'subdomain {record} not exist!')
 
@@ -231,8 +200,6 @@ def get_all_zones_list():
                 domains_list.append(i.get('name'))
         return domains_list
 
-
-
 def help():
     print(f'{clr.yellow}add/del TXT record{clr.rest}:')
     print('dns set TXT subdomain.yourDomain.com "some txt text"')
@@ -250,7 +217,6 @@ def var_exist(var):
      var_exists = var in locals() or var in globals()
      return var_exists
 
-
 def main():
     lambd_lower = lambda a: a.lower()
 
@@ -261,6 +227,18 @@ def main():
                print(f'{i}')
        else:
            help()
+
+    #'''get_a_dns_records(zone)'''
+    elif len(sys.argv) == 3:
+        mode   = sys.argv[1]
+        record = sys.argv[2]
+        zone   = '.'.join(record.split('.')[-2:])
+
+        if zone in get_all_zones_list():
+            get_a_dns_records(zone)
+        else:
+            print(f'Erro: zone "{zone}" does not exist in Your zones!')
+            sys.exit(1)
 
     #''' set TXT or A record'''
     elif len(sys.argv) == 5:
@@ -319,107 +297,5 @@ def main():
         print('deb 04.')
         help()
 
-
-
-
-    ##''' SET TXT record'''
-    #elif len(sys.argv) == 5:
-    #    mode_list = ['txt']
-    #    lambd_lower = lambda a: a.lower()
-
-    #    if sys.argv[4].lower() in map(lambd_lower, mode_list): 
-    #        mode   = sys.argv[1]
-    #        dns_name   = sys.argv[2]
-    #        record = sys.argv[3]
-    #        zone   = '.'.join(dns_name.split('.')[-2:])
-    #        mode_list = ['set', 'add']
-    #        if mode in mode_list:
-    #            set_txt_record(zone,dns_name,record)
-    #        else:
-    #            help()
-
-    ##'''del TXT record OR set A record'''
-    #elif len(sys.argv) == 4:
-    #    #print('ssy argv == 4')
-    #    RECORD_TYPE = sys.argv[3].lower()
-    #    #print(f'RECORD_TYPE = {RECORD_TYPE}')
-
-    #    txt_mode_list = ['txt']
-    #    a_mode_list = ['a']
-
-    #    lambd_lower = lambda a: a.lower()
-
-
-    #    print(f'RECORD_TYPE = {RECORD_TYPE}')
-    #    if RECORD_TYPE in map(lambd_lower, txt_mode_list): 
-    #        print('AAAAAAAAA')
-
-    #        mode       = sys.argv[1]
-    #        dns_name   = sys.argv[2]
-    #        #record     = sys.argv[3]
-    #        print(f'dns_name = {dns_name}')
-    #        zone   = '.'.join(dns_name.split('.')[-2:])
-
-    #        mode_list = ['del', 'delete', 'remove']
-    #        #'''if mode == "del"'''
-    #        if mode in mode_list:
-    #            #print('SSSSSSSSSSSSSSSS')
-    #            #print(f'zone = {zone}')
-    #            #print(f'dns_name = {dns_name}')
-    #            #print(f'dns_name = {dns_name}')
-    #            del_txt_record(zone,dns_name)
-    #            #if zone in get_all_zones_list():
-    #            #    del_txt_record(zone,dns_name)
-    #            #else:
-    #            #    help()
-    #            #    #print(f'Erro: zone "{zone}" does not exist in Your zones!')
-    #            #    sys.exit(1)
-    #        else:
-    #            help()
-
-    #    #elif RECORD_TYPE in map(lambd_lower, a_mode_list): 
-    #    elif var_exist(RECORD_TYPE) or RECORD_TYPE in map(lambd_lower, a_mode_list):
-    #        print('BBBBBBBBBBB')
-    #        #''' SET A record'''
-    #        mode   = sys.argv[1]
-    #        record = sys.argv[2]
-    #        ipaddr = sys.argv[3]
-    #        zone   = '.'.join(record.split('.')[-2:])
-    #        mode_list = ['set', 'add']
-    #        if mode in mode_list:
-    #            set_ipaddr(zone,record,ipaddr)
-    #        else:
-    #            help()
-    #    
-    #    else:
-    #        print('deb 03. see help()')
-    #        help()
-
-    ##'''DEL A record or GET all A records'''
-    #elif len(sys.argv) == 3:
-    #    mode   = sys.argv[1]
-    #    record = sys.argv[2]
-    #    zone   = '.'.join(record.split('.')[-2:])
-    #    mode_list = ['del', 'delete', 'remove']
-
-    #    #'''if mode == "del"'''
-    #    if mode in mode_list:
-    #        if zone in get_all_zones_list():
-    #            def_delete(record,zone)
-    #        else:
-    #            print(f'Erro: zone "{zone}" does not exist in Your zones!')
-    #            sys.exit(1)
-    #    #'''get_a_dns_records(zone)'''
-    #    elif mode == 'get_all_a':
-    #        if zone in get_all_zones_list():
-    #            get_a_dns_records(zone)
-    #        else:
-    #            print(f'Erro: zone "{zone}" does not exist in Your zones!')
-    #            sys.exit(1)
-    #    else:
-    #        help()
-    #else:
-    #    help()
-    
 if __name__ == "__main__":
     main()
