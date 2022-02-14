@@ -40,6 +40,21 @@ You can see help in any place type:
 ```
 $ dns 
 ```
+shown help:
+```
+set/del TXT record:
+dns set TXT subdomain.yourDomain.com "some txt text"
+dns del TXT subdomain.yourDomain.com
+set/del A record:
+dns set A   subdomain.yourDomain.com 8.8.8.8
+dns del A   subdomain.yourDomain.com
+view all A records in by domain:
+dns get_all_a yourDomain.com
+view all zones (your root domains)
+dns get_zones
+```
+
+
 Get all your zone:
 ```
 $ dns get_zonez
@@ -58,3 +73,4 @@ Delete A record:
 ```
 $ dns del subdomain.yourDomain.com
 ```
+

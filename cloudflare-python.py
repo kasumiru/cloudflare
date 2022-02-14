@@ -207,8 +207,9 @@ def help():
     print(f'{clr.yellow}add/del A record{clr.rest}:')
     print('dns set A   subdomain.yourDomain.com 8.8.8.8')
     print('dns del A   subdomain.yourDomain.com ')
-    print(f'{clr.yellow}view{clr.rest}:')
+    print(f'{clr.yellow}view all A records in by domain{clr.rest}:')
     print('dns get_all_a yourDomain.com ')
+    print(f'{clr.yellow}view all zones (your root domains){clr.rest}:')
     print('dns get_zones')
     sys.exit(1)
 
@@ -265,7 +266,7 @@ def main():
                 print(f'deb 01.')
                 help()
         else:
-            print('deb 05.')
+            print('deb 02.')
             help()
 
     #''' del TXT or A record'''
@@ -287,14 +288,13 @@ def main():
                 print(f'deleting A dns_name = {dns_name}')
                 def_delete(dns_name,zone)
             else:
-                print(f'deb 02.')
+                print(f'deb 03.')
                 help()
             
         else:
-            print('deb 06.')
+            print('deb 04.')
             help()
     else:
-        print('deb 04.')
         help()
 
 if __name__ == "__main__":
