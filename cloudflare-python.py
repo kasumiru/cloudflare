@@ -3,6 +3,7 @@ import sys
 import os
 import requests
 import json
+import re
 
 
 # feature release. =/
@@ -71,6 +72,13 @@ def read_conf():
 read_conf()
 
 def set_ipaddr(zone,record,ipaddr):
+    ip_check = re.findall("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", ipaddr)
+    if not ip_check:
+        print(f'Ip address {ipaddr} not valid, exit now!')
+        exit(1)
+    if not zone:
+        print('Cant recognize zone: {zone}, exit 1')
+        exit(1)
     data = {
         'type':     "A",
         'ttl':      "120",
@@ -219,6 +227,7 @@ def var_exist(var):
      return var_exists
 
 def main():
+
     lambd_lower = lambda a: a.lower()
 
     #'''Get all zones'''
