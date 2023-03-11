@@ -81,7 +81,7 @@ def set_ipaddr(zone,record,ipaddr):
         exit(1)
     data = {
         'type':     "A",
-        'ttl':      "120",
+        'ttl':      "30",
         'priority': 10,
         'proxied':  False
     }
