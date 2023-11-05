@@ -81,7 +81,7 @@ def set_ipaddr(zone,record,ipaddr):
         exit(1)
     data = {
         'type':     "A",
-        'ttl':      "30",
+        'ttl':      "60", # 30: [{'code': 9021, 'message': 'TTL must be between 60 and 86400 seconds, or 1 for Automatic.'}]}], 'messages': []}
         'priority': 10,
         'proxied':  False
     }
